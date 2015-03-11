@@ -56,8 +56,6 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					<th id="categorylist_header_title">
 						<?php echo JHtml::_('grid.sort', 'JGLOBAL_TITLE', 'c.core_title', $listDirn, $listOrder); ?>
 					</th>
-					<th>
-					</th>
 					<?php if ($date = $this->params->get('tag_list_show_date')) : ?>
 						<th id="categorylist_header_date">
 							<?php if ($date == "created") : ?>
@@ -79,24 +77,24 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 					 <tr class="system-unpublished cat-list-row<?php echo $i % 2; ?>">
 					<?php else: ?>
 					<tr class="cat-list-row<?php echo $i % 2; ?>" >
-					<?php endif; ?>
+					<?php endif;   //Router code to make Article Title linkable?>
 						<td headers="categorylist_header_title" class="list-title">
 							<a href="<?php echo JRoute::_(TagsHelperRoute::getItemRoute($item->content_item_id, $item->core_alias, $item->core_catid, $item->core_language, $item->type_alias, $item->router)); ?>">
-								<?php echo $this->escape($item->core_title); ?>
-							</a>
+								<?php echo $this->escape($item->core_title); //End Router Code?>
+							</a>   
 							<?php if ($item->core_state == 0) : ?>
 								<span class="list-published label label-warning">
 									<?php echo JText::_('JUNPUBLISHED'); ?>
 								</span>
-							<?php endif; ?>
-					
-							<?php $article = JTable::getInstance("content"); $article->load($item->content_item_id);?>
-							<?php //get category name by id
+							<?php endif; ?>							
+							<?php //Begin Category Acquisition - Grab the current item information
+							$article = JTable::getInstance("content"); $article->load($item->content_item_id);?>
+							<?php //Query the database for the category name by id
 							$db = JFactory::getDbo();
 							$id = $item->core_catid;
 							$db->setQuery("SELECT cat.title FROM #__categories cat WHERE cat.id='$id'");
-							$category = $db->loadResult();
-							echo '<span style="margin-left: 25px;"><small><i class="fa fa-folder-open margin-right-5"></i> Filed in: '.$category.'</small></span>';?>
+							$category = $db->loadResult();  //Show the result of the query
+							echo '<span style="margin-left: 25px; margin-right: 5px;"><small><i class="fa fa-folder-open"></i> Filed in: '.$category.'</small></span>';?>
 						</td>
 							<?php if ($this->params->get('tag_list_show_date')) : ?>
 							<td headers="categorylist_header_date" class="list-date small">
