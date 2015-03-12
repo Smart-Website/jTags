@@ -94,7 +94,15 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 							$id = $item->core_catid;
 							$db->setQuery("SELECT cat.title FROM #__categories cat WHERE cat.id='$id'");
 							$category = $db->loadResult();  //Show the result of the query
-							echo '<span style="margin-left: 25px; margin-right: 5px;"><small><i class="fa fa-folder-open"></i> Filed in: '.$category.'</small></span>';?>
+							echo '<br /><span style="margin-left: 25px; margin-right: 5px;"><small><i class="fa fa-folder-open"></i> Filed in: '.$category.'</small></span>';?>
+							
+							<?php //Begin Author Acquisition - Only addresses actual author, not aliases!
+								$db = JFactory::getDBO();  //opens a new database connection
+								$userid = $item->core_created_user_id;
+								$db->setQuery("SELECT `username` FROM #__users WHERE `id`='$userid'");
+								//gets the author's ID
+								$owner =$db->loadResult();
+								echo '<span style="margin-left: 25px; margin-right: 5px;"><small><i class="fa fa-user"></i> Written by: '.$owner.'</small></span>';?>
 						</td>
 							<?php if ($this->params->get('tag_list_show_date')) : ?>
 							<td headers="categorylist_header_date" class="list-date small">
